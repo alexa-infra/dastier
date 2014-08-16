@@ -15,7 +15,7 @@ class Link(object):
     def __repr__(self):
         return '<Link %r>' % (self.url)
 
-links = Table('reader_link', metadata,
+links = Table('links', metadata,
               Column('id', Integer, primary_key=True),
               Column('url', String(200)),
               Column('title', String(50)),
@@ -36,7 +36,7 @@ class ReadLater(object):
     def __repr__(self):
         return '<ReadLater: %r>' % self.url
 
-read_later = Table('reader_readlater', metadata,
+read_later = Table('readlaters', metadata,
                    Column('id', Integer, primary_key=True),
                    Column('url', String(200)),
                    Column('title', String(50)),
