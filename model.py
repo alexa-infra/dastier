@@ -12,6 +12,10 @@ class Link(object):
         self.usage_count = 0
         self.last_access = datetime.utcnow()
 
+    def touch(self):
+        self.usage_count += 1
+        self.last_access = datetime.utcnow()
+
     def __repr__(self):
         return '<Link %r>' % (self.url)
 
@@ -31,7 +35,7 @@ class ReadLater(object):
         self.url = url
         self.title = title
         self.created = datetime.utcnow()
-        self.reader = False
+        self.readed = False
 
     def __repr__(self):
         return '<ReadLater: %r>' % self.url

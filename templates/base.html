@@ -16,9 +16,9 @@
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
       <div class="container">
-        <a class="brand" href="/">Reader</a>
+	<a class="brand" href="{{ url_for('bookmarks.show') }}">Reader</a>
 	<ul class="nav">
-	  <li><a class="" href="/readlater">Read later</a></li>
+          <li><a class="" href="{{ url_for('readitlater.show') }}">Read later</a></li>
 	</ul>
       </div>
     </div>

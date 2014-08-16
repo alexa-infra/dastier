@@ -1,6 +1,6 @@
 javascript:(
   function() {
-    var url = '{{ url_for("add_home", _external=True) }}';
+    var url = '{{ url_for("bookmarks.add", _external=True) }}';
     var args = [
       'title=' + encodeURIComponent(document.title),
       'url=' + encodeURIComponent(document.location.href)
