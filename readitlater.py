@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, render_template, request
+from flask import Blueprint, abort, render_template, request, url_for
 from sqlalchemy import desc
 from database import db_session
 from model import ReadLater
@@ -31,4 +31,10 @@ def add():
     db_session.add(link)
     db_session.commit()
     return render_template('add_read_later.html')
+
+@readitlater_page.app_template_global()
+def url_for_other_page(page):
+    args = request.view_args.copy()
+    args['page'] = page
+    return url_for(request.endpoint, **args)
 
