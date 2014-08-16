@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block body %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.mark-read').change(function(){
+      var pthis = $(this);
+      var id = pthis.attr('id');
+      var checked = pthis.checked();
+    });
+  });
+</script>
+{% for link in links %}
+  <blockquote>
+    <p><a href="{{ link.url }}">{{ link.title }}</a></p>
+    <small>{{ link.url }}</small>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox">Mark as read
+      </label>
+    </div>
+  </blockquote>
+{% endfor %}
+
+<div class="pagination">
+  <ul>
+    {% if paginator.has_prev %}
+    <li><a href="{{ url_for_other_page(paginator.page - 1) }}">previous</a></li>
+    {% endif %}
+    {% if paginator.pages > 1 %}
+    <li><a href="#">{{ paginator.page }} of {{ paginator.pages }}</a></li>
+    {% endif %}
+    {% if paginator.has_next %}
+    <li><a href="{{ url_for_other_page(paginator.page + 1) }}">next</a></li>
+    {% endif %}
+  </ul>
+</div>
+
+<div class="container">
+  Quickly add link to this list with following bookmarklet:
+<a class="btn btn-primary" href="{% spaceless %}
+{% include "add_readlater.js" %}
+{% endspaceless %}">Read it later</a>
+</div>
+
+{% endblock %}

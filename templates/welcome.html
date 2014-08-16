@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block body %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<style>
+  .link-box {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
+  .sites {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  .site {
+    width: 25%;
+    vertical-align: top;
+    float: left;
+    margin-top: 2px;
+  }
+  .bookmarklet {
+    margin: 30px auto;
+    text-align: center;
+  }
+</style>
+<script>
+ $(document).ready(function() {
+   $('#search').keyup(function(){
+     var term = $(this).val().toLowerCase();
+     var $sites = $('.site');
+     $sites.show().filter(function(){
+       var text = $(this).find('.link-box').text().replace(/\s+/g, ' ').toLowerCase();
+       return !~text.indexOf(term);
+     }).hide();
+   });
+   $('#search').focus();
+ });
+</script>
+<div class="container" style="text-align: center">
+  <input type="text" id="search"></input>
+</div>
+<section class="sites">
+{% for link in links %}
+  <section class="site">
+    <a class="link-box" href="{{ short_url(link.id) }}">{{ link.title }}</a>
+  </section>
+{% endfor %}
+</section>
+
+<div style="clear: both;"></div>
+<div class="container bookmarklet">
+  Quickly add link to this list with following bookmarklet:
+<a class="btn btn-primary" href="{% spaceless %}
+{% include "add_home.js" %}
+{% endspaceless %}">Keep home</a>
+</div>
+
+{% endblock %}
