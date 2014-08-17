@@ -1,47 +1,121 @@
 {% extends "base.html" %}
 
 {% block body %}
+<style>
+#read-list {
+	margin: 10px 0;
+	padding: 0;
+	list-style: none;
+}
+
+#read-list li {
+	padding: 10px 20px 10px 0;
+	position: relative;
+	border-bottom: 1px solid #cccccc;
+}
+
+#read-list li:last-child {
+	border-bottom: none;
+}
+
+#read-list .close {
+	position: absolute;
+	right: 5px;
+	top: 10px;
+	display: none;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+}
+
+#read-list li:hover .close{
+  	display: block;
+}
+
+#read-list li .view .mark-read {
+	margin: 0 0;
+}
+
+#read-list li.done a {
+	color: #777777;
+	text-decoration: line-through;
+}
+
+.center {
+	margin: 0 auto !important;
+	float: none !important;
+}
+</style>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script>
   $(document).ready(function() {
     $('.mark-read').change(function(){
       var pthis = $(this);
-      var id = pthis.attr('id');
-      var checked = pthis.checked();
+      var idstr = pthis.attr('id');
+      var re = /link-(\d+)/;
+      var match = re.exec(idstr);
+      var id = match[1];
+      var checked = this.checked;
+      $.ajax({
+	      url: '/api/readitlater/' + id,
+	      type: 'PUT',
+	      data: JSON.stringify({ readed : checked }),
+	      contentType: "application/json",
+	      success: function(data) {
+		      pthis.parents('li').toggleClass('done', checked);
+	      }
+      });
+    });
+    $('.close').click(function(){
+      var pthis = $(this);
+      var idstr = pthis.attr('id');
+      var re = /del-(\d+)/;
+      var match = re.exec(idstr);
+      var id = match[1];
+      $.ajax({
+	      url: '/api/readitlater/' + id,
+	      type: 'DELETE',
+	      contentType: "application/json",
+	      success: function(data) {
+		      pthis.parents('li').remove();
+	      }
+      });
     });
   });
 </script>
-{% for link in links %}
-  <blockquote>
-    <p><a href="{{ link.url }}">{{ link.title }}</a></p>
-    <small>{{ link.url }}</small>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox">Mark as read
-      </label>
-    </div>
-  </blockquote>
-{% endfor %}
-
-<div class="pagination">
-  <ul>
-    {% if paginator.has_prev %}
-    <li><a href="{{ url_for_other_page(paginator.page - 1) }}">previous</a></li>
-    {% endif %}
-    {% if paginator.pages > 1 %}
-    <li><a href="#">{{ paginator.page }} of {{ paginator.pages }}</a></li>
-    {% endif %}
-    {% if paginator.has_next %}
-    <li><a href="{{ url_for_other_page(paginator.page + 1) }}">next</a></li>
-    {% endif %}
-  </ul>
-</div>
-
 <div class="container">
-  Quickly add link to this list with following bookmarklet:
-<a class="btn btn-primary" href="{% spaceless %}
-{% include "add_readlater.js" %}
-{% endspaceless %}">Read it later</a>
+  <div class="span5 center">
+    <ul id="read-list">
+      {% for link in links %}
+      <li class="{% if link.readed %}done{% endif %}">
+        <div class="view">
+          <input class="mark-read" type="checkbox" id="link-{{ link.id }}">
+          <a href="{{ link.url }}">{{ link.title }}</a>
+	  <button type="button" class="close" id="del-{{ link.id }}">&times;</button>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="pagination text-center center">
+      <ul>
+        {% if paginator.has_prev %}
+        <li><a href="{{ url_for_other_page(paginator.page - 1) }}">previous</a></li>
+        {% endif %}
+        {% if paginator.pages > 1 %}
+        <li><a href="#">{{ paginator.page }} of {{ paginator.pages }}</a></li>
+        {% endif %}
+        {% if paginator.has_next %}
+        <li><a href="{{ url_for_other_page(paginator.page + 1) }}">next</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    <div>
+      Quickly add link to this list with following bookmarklet:
+      <a class="btn btn-primary" href="{% spaceless %}
+        {% include "add_readlater.js" %}
+      {% endspaceless %}">Read it later</a>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

@@ -11,8 +11,7 @@ PER_PAGE = 20
 @readitlater_page.route('/', defaults={'page': 1})
 @readitlater_page.route('/page/<int:page>')
 def show(page):
-    query = ReadLater.query.filter(ReadLater.readed == False) \
-                           .order_by(desc(ReadLater.created))
+    query = ReadLater.query.order_by(desc(ReadLater.created))
     count = query.count()
     items = query.limit(PER_PAGE).offset(PER_PAGE * (page - 1))
     if not items and page != 1:
