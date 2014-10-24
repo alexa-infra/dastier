@@ -2,6 +2,11 @@
 
 {% block body %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
 <style>
   .link-box {
     width: 100%;
@@ -43,11 +48,11 @@
   <input type="text" id="search"></input>
 </div>
 <section class="sites">
-{% for link in links %}
+{# {% for link in links %}
   <section class="site">
     <a class="link-box" href="{{ short_url(link.id) }}">{{ link.title }}</a>
   </section>
-{% endfor %}
+{% endfor %} #}
 </section>
 
 <div style="clear: both;"></div>
@@ -57,5 +62,6 @@
 {% include "add_home.js" %}
 {% endspaceless %}">Keep home</a>
 </div>
+<script src="{{ url_for('static', filename='home.js') }}"></script>
 
 {% endblock %}

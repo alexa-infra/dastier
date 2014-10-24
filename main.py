@@ -19,7 +19,8 @@ app.register_blueprint(readitlater_page, url_prefix='/readitlater')
 
 manager = APIManager(app, session=db_session)
 manager.create_api(Link, methods=['GET', 'POST', 'PUT', 'DELETE'],
-                   url_prefix='/api', collection_name='bookmark')
+                   url_prefix='/api', collection_name='bookmark',
+                   results_per_page=-1)
 manager.create_api(ReadLater, methods=['GET', 'POST', 'PUT', 'DELETE'],
                    url_prefix='/api', collection_name='readitlater')
 
