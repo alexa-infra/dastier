@@ -7,7 +7,6 @@ from model import Link, ReadLater
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.jinja_env.add_extension('spaceless.SpacelessExtension')
 
 app.config.update(dict(
     DEBUG=True,
@@ -29,7 +28,4 @@ manager.create_api(ReadLater, methods=['GET', 'POST', 'PUT', 'DELETE'],
 @app.teardown_appcontext
 def shutdown(error):
     db_session.remove()
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
 
