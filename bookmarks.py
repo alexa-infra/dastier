@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, abort, redirect, request, url_for
-from sqlalchemy import desc
 from database import db_session
 from model import Link
 from util import truncate_char_to_space
@@ -8,8 +7,7 @@ bookmarks_page = Blueprint('bookmarks', __name__)
 
 @bookmarks_page.route('/')
 def show():
-    entries = Link.query.order_by(desc(Link.last_access)).all()
-    return render_template('welcome.html', links=entries)
+    return render_template('welcome.html')
 
 @bookmarks_page.route('/k/<int:idx>')
 def follow(idx):
@@ -37,8 +35,3 @@ def add():
     db_session.commit()
     return render_template('add_home.html')
 
-@bookmarks_page.context_processor
-def short_url_utility():
-    def short_url(idx):
-        return url_for('bookmarks.follow', idx=idx)
-    return dict(short_url=short_url)

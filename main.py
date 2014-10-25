@@ -22,7 +22,9 @@ manager.create_api(Link, methods=['GET', 'POST', 'PUT', 'DELETE'],
                    url_prefix='/api', collection_name='bookmark',
                    results_per_page=-1)
 manager.create_api(ReadLater, methods=['GET', 'POST', 'PUT', 'DELETE'],
-                   url_prefix='/api', collection_name='readitlater')
+                   url_prefix='/api',
+                   collection_name='readitlater',
+                   results_per_page=20)
 
 @app.teardown_appcontext
 def shutdown(error):

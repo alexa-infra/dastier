@@ -32,11 +32,11 @@
   	display: block;
 }
 
-#read-list li .view .mark-read {
+#read-list .mark-read {
 	margin: 0 0;
 }
 
-#read-list li.done a {
+#read-list .done a {
 	color: #777777;
 	text-decoration: line-through;
 }
@@ -52,28 +52,8 @@
 <div class="container">
   <div class="span5 center">
     <ul id="read-list">
-      {% for link in links %}
-      <li class="{% if link.readed %}done{% endif %}">
-        <div class="view">
-          <input class="mark-read" type="checkbox" id="link-{{ link.id }}">
-          <a href="{{ link.url }}">{{ link.title }}</a>
-	  <button type="button" class="close" id="del-{{ link.id }}">&times;</button>
-        </div>
-      </li>
-      {% endfor %}
     </ul>
-    <div class="pagination text-center center">
-      <ul>
-        {% if paginator.has_prev %}
-        <li><a href="{{ url_for_other_page(paginator.page - 1) }}">previous</a></li>
-        {% endif %}
-        {% if paginator.pages > 1 %}
-        <li><a href="#">{{ paginator.page }} of {{ paginator.pages }}</a></li>
-        {% endif %}
-        {% if paginator.has_next %}
-        <li><a href="{{ url_for_other_page(paginator.page + 1) }}">next</a></li>
-        {% endif %}
-      </ul>
+    <div class="pagination text-center center" id="paginator">
     </div>
     <div>
       Quickly add link to this list with following bookmarklet:
@@ -86,42 +66,32 @@
 {% endblock body %}
 
 {% block endbody %}
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $('.mark-read').change(function(){
-      var pthis = $(this);
-      var idstr = pthis.attr('id');
-      var re = /link-(\d+)/;
-      var match = re.exec(idstr);
-      var id = match[1];
-      var checked = this.checked;
-      $.ajax({
-	      url: '/api/readitlater/' + id,
-	      type: 'PUT',
-	      data: JSON.stringify({ readed : checked }),
-	      contentType: "application/json",
-	      success: function(data) {
-		      pthis.parents('li').toggleClass('done', checked);
-	      }
-      });
-    });
-    $('.close').click(function(){
-      var pthis = $(this);
-      var idstr = pthis.attr('id');
-      var re = /del-(\d+)/;
-      var match = re.exec(idstr);
-      var id = match[1];
-      $.ajax({
-	      url: '/api/readitlater/' + id,
-	      type: 'DELETE',
-	      contentType: "application/json",
-	      success: function(data) {
-		      pthis.parents('li').remove();
-	      }
-      });
-    });
-  });
+<script type="text/template" id="item-template">
+  <div class="<% if (readed) print('done') %>">
+    <input class="mark-read" type="checkbox" <% if (readed) print('checked')%>>
+    <a href="<%= url %>"><%= title %></a>
+	  <button type="button" class="close">&times;</button>
+  </div>
 </script>
+<script type="text/template" id="paginator-tmpl">
+  <ul>
+    <% if (page > 1) { %>
+      <li><a href="#page/<%= page-1 %>">previous</a></li>
+    <% } %>
+    <% if (num_pages > 1) { %>
+      <li><a href="#page/<%= page %>"><%= page %> of <%= num_pages %></a></li>
+    <% } %>
+    <% if (page < num_pages) { %>
+      <li><a href="#page/<%= page+1 %>">next</a></li>
+    <% } %>
+  </ul>
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
+<script src="{{ url_for('static', filename='readlater.js') }}"></script>
 {% endblock endbody %}
 
