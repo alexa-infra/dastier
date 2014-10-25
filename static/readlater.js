@@ -49,14 +49,21 @@ var ReadLaterView = Backbone.View.extend({
 
 var Reader = Backbone.View.extend({
   items: new ReadLaterList(),
+  searchQuery: '',
   initialize: function(){
     this.listenTo(this.items, 'reset', this.addAll);
   },
   update: function(page) {
-    var filters = [{'field': 'created', 'direction': 'desc'}];
+    var query = {};
+    var order = [{'field': 'created', 'direction': 'desc'}];
+    query.order_by = order;
+    if (this.searchQuery) {
+      var filters = [{'name': 'title', 'op': 'like', 'val': '%' + this.searchQuery + '%'}];
+      query.filters = filters;
+    }
     this.items.fetch({ reset: true,
       data: {
-        'q': JSON.stringify({ 'order_by': filters }),
+        'q': JSON.stringify(query),
         'page': page
       }
     });
@@ -78,27 +85,53 @@ var Reader = Backbone.View.extend({
     $('#paginator').html(tmpl({
       page: this.items.page,
       num_pages: this.items.num_pages,
-      num_results: this.items.num_results
+      num_results: this.items.num_results,
+      query: (this.searchQuery) ? ('search/' + this.searchQuery) : 'page'
     }));
     return this;
+  },
+  search: function(q){
+    this.searchQuery = q;
   }
 });
 
 var AppRouter = Backbone.Router.extend({
   routes: {
     '': 'home',
-    'page/:page': 'paged'
+    'page/:page': 'paged',
+    'search/:query': 'searchFirst',
+    'search/:query/:page': 'search'
+  },
+  go: function(q, page) {
+    window.app.search(q);
+    window.app.update(page);
   },
   home: function(){
-    window.app.update(1);
+    this.go('', 1);
   },
   paged: function(page){
-    window.app.update(page);
+    this.go('', page);
+  },
+  searchFirst: function(query){
+    this.go(query, 1);
+  },
+  search: function(query, page){
+    this.go(query, page);
   }
 });
 
 window.app = new Reader({ el: $('#read-list') });
 window.appRouter = new AppRouter();
 Backbone.history.start();
+
+$('#search').keyup(function(){
+  var term = $(this).val().toLowerCase();
+  term = term.replace(/\s/g, '');
+  if (term)
+    window.appRouter.navigate('search/' + term, { trigger: true, replace: true });
+  else
+    window.appRouter.navigate('', { trigger: true });
+});
+$('#search').focus();
 
 });

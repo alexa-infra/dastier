@@ -51,6 +51,9 @@
 {% block body %}
 <div class="container">
   <div class="span5 center">
+    <div style="text-align:center">
+      <input type="text" id="search">
+    </div>
     <ul id="read-list">
     </ul>
     <div class="pagination text-center center" id="paginator">
@@ -76,13 +79,13 @@
 <script type="text/template" id="paginator-tmpl">
   <ul>
     <% if (page > 1) { %>
-      <li><a href="#page/<%= page-1 %>">previous</a></li>
+      <li><a href="#<%= query %>/<%= page-1 %>">previous</a></li>
     <% } %>
     <% if (num_pages > 1) { %>
-      <li><a href="#page/<%= page %>"><%= page %> of <%= num_pages %></a></li>
+      <li><a href="#<%= query %>/<%= page %>"><%= page %> of <%= num_pages %></a></li>
     <% } %>
     <% if (page < num_pages) { %>
-      <li><a href="#page/<%= page+1 %>">next</a></li>
+      <li><a href="#<%= query %>/<%= page+1 %>">next</a></li>
     <% } %>
   </ul>
 </script>
