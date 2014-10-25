@@ -12,14 +12,14 @@ var LinkList = Backbone.Collection.extend({
   model: Link,
   url: '/api/bookmark',
   parse: function(response) {
-  return response.objects;
+    return response.objects;
   },
   comparator: function(a, b) {
     var i = a.last_access_dt();
-  var j = b.last_access_dt();
-  if (i > j) return -1;
-  if (i < j) return 1;
-  return 0;
+    var j = b.last_access_dt();
+    if (i > j) return -1;
+    if (i < j) return 1;
+    return 0;
   } 
 });
 
@@ -33,7 +33,7 @@ var LinkView = Backbone.View.extend({
   },
   render: function(){
     this.$el.html(this.template(this.model.attributes));
-  return this;
+    return this;
   },
   events: {
     'click .link-box': 'click'
@@ -76,10 +76,9 @@ var Home = Backbone.View.extend({
   },
   addOne: function(it){
     var view = new LinkView({model: it});
-  this.$el.append(view.render().el);
+    this.$el.append(view.render().el);
   },
   addAll: function(){
-    this.links.sortBy(function(it){ return it.last_access_dt(); });
     this.links.each(this.addOne, this);
   }
 });
