@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block body %}
+{% block head %}
 <style>
 #read-list {
 	margin: 10px 0;
@@ -46,6 +46,46 @@
 	float: none !important;
 }
 </style>
+{% endblock head %}
+
+{% block body %}
+<div class="container">
+  <div class="span5 center">
+    <ul id="read-list">
+      {% for link in links %}
+      <li class="{% if link.readed %}done{% endif %}">
+        <div class="view">
+          <input class="mark-read" type="checkbox" id="link-{{ link.id }}">
+          <a href="{{ link.url }}">{{ link.title }}</a>
+	  <button type="button" class="close" id="del-{{ link.id }}">&times;</button>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="pagination text-center center">
+      <ul>
+        {% if paginator.has_prev %}
+        <li><a href="{{ url_for_other_page(paginator.page - 1) }}">previous</a></li>
+        {% endif %}
+        {% if paginator.pages > 1 %}
+        <li><a href="#">{{ paginator.page }} of {{ paginator.pages }}</a></li>
+        {% endif %}
+        {% if paginator.has_next %}
+        <li><a href="{{ url_for_other_page(paginator.page + 1) }}">next</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    <div>
+      Quickly add link to this list with following bookmarklet:
+      <a class="btn btn-primary" href="{% spaceless %}
+        {% include "add_readlater.js" %}
+      {% endspaceless %}">Read it later</a>
+    </div>
+  </div>
+</div>
+{% endblock body %}
+
+{% block endbody %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script>
   $(document).ready(function() {
@@ -83,39 +123,5 @@
     });
   });
 </script>
-<div class="container">
-  <div class="span5 center">
-    <ul id="read-list">
-      {% for link in links %}
-      <li class="{% if link.readed %}done{% endif %}">
-        <div class="view">
-          <input class="mark-read" type="checkbox" id="link-{{ link.id }}">
-          <a href="{{ link.url }}">{{ link.title }}</a>
-	  <button type="button" class="close" id="del-{{ link.id }}">&times;</button>
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-    <div class="pagination text-center center">
-      <ul>
-        {% if paginator.has_prev %}
-        <li><a href="{{ url_for_other_page(paginator.page - 1) }}">previous</a></li>
-        {% endif %}
-        {% if paginator.pages > 1 %}
-        <li><a href="#">{{ paginator.page }} of {{ paginator.pages }}</a></li>
-        {% endif %}
-        {% if paginator.has_next %}
-        <li><a href="{{ url_for_other_page(paginator.page + 1) }}">next</a></li>
-        {% endif %}
-      </ul>
-    </div>
-    <div>
-      Quickly add link to this list with following bookmarklet:
-      <a class="btn btn-primary" href="{% spaceless %}
-        {% include "add_readlater.js" %}
-      {% endspaceless %}">Read it later</a>
-    </div>
-  </div>
-</div>
+{% endblock endbody %}
 
-{% endblock %}

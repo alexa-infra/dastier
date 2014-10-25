@@ -10,6 +10,7 @@
     body { padding-top: 60px; padding-bottom:40px; }
   </style>
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+  {% block head %}{% endblock %}
 </head>
 
 <body>
@@ -26,6 +27,6 @@
   <div class="container">
     {% block body %}{% endblock %}
   </div>
-
+  {% block endbody %}{% endblock %}
 </body>
 </html>

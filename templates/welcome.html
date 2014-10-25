@@ -1,12 +1,6 @@
 {% extends "base.html" %}
 
-{% block body %}
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
+{% block head %}
 <style>
   .link-box {
     width: 100%;
@@ -31,19 +25,9 @@
     text-align: center;
   }
 </style>
-<script>
- $(document).ready(function() {
-   $('#search').keyup(function(){
-     var term = $(this).val().toLowerCase();
-     var $sites = $('.site');
-     $sites.show().filter(function(){
-       var text = $(this).find('.link-box').text().replace(/\s+/g, ' ').toLowerCase();
-       return !~text.indexOf(term);
-     }).hide();
-   });
-   $('#search').focus();
- });
-</script>
+{% endblock head %}
+
+{% block body %}
 <div class="container" style="text-align: center">
   <input type="text" id="search"></input>
 </div>
@@ -62,6 +46,27 @@
 {% include "add_home.js" %}
 {% endspaceless %}">Keep home</a>
 </div>
-<script src="{{ url_for('static', filename='home.js') }}"></script>
+{% endblock body %}
 
-{% endblock %}
+{% block endbody %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
+<script src="{{ url_for('static', filename='home.js') }}"></script>
+<script>
+ $(document).ready(function() {
+   $('#search').keyup(function(){
+     var term = $(this).val().toLowerCase();
+     var $sites = $('.site');
+     $sites.show().filter(function(){
+       var text = $(this).find('.link-box').text().replace(/\s+/g, ' ').toLowerCase();
+       return !~text.indexOf(term);
+     }).hide();
+   });
+   $('#search').focus();
+ });
+</script>
+{% endblock endbody %}
